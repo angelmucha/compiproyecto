@@ -1,0 +1,50 @@
+push 1
+print
+push 0
+print
+push 1
+push 1
+and
+print
+push 1
+push 0
+and
+print
+push 0
+push 0
+and
+print
+push 1
+push 1
+or
+print
+push 1
+push 0
+or
+print
+push 0
+push 0
+or
+print
+push  3
+push  3
+sub
+dup
+push  7
+push  1
+add
+lt
+jmpz L1
+L0: skip
+load 32764
+print
+push 1
+add
+dup
+push  7
+push  1
+add
+lt
+jmpz L1
+goto L0
+L1: skip
