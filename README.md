@@ -6,7 +6,8 @@
 
 # Punto 1: Comentarios
 
-``` else if (c == '/')
+```cpp
+  else if (c == '/')
   {
     c = nextChar();
     if (c == '/')
@@ -41,7 +42,7 @@ Con estos cambios, el scanner ahora puede manejar comentarios de una sola línea
 Se agregaron las siguientes definiciones de codegen en las implementaciones:
 
 - `int ImpCodeGen::visit(ForStatement* s)`: Esta definición de codegen se utiliza para compilar la instrucción `for` en Imp. Genera código que inicializa la variable de iteración, compara el valor de la variable de iteración con el valor final y ejecuta el cuerpo del bucle. También genera código para incrementar la variable de iteración y volver a la comparación. Las etiquetas `l1` y `l2` se utilizan para controlar el flujo del bucle.
-```
+```cpp
 int ImpCodeGen::visit(ForStatement* s) {
   string l1 = next_label();
   string l2 = next_label();
@@ -73,7 +74,7 @@ int ImpCodeGen::visit(ForStatement* s) {
 }
 ```
 - `int ImpCodeGen::visit(BoolConstExp* e)`: Esta definición de codegen se utiliza para compilar las constantes booleanas en Imp. Genera código que empuja un valor booleano a la pila.
-```
+```cpp
 int ImpCodeGen::visit(BoolConstExp* e) { // agregado
   if (e->b) {
     codegen(nolabel,"push",1);
@@ -84,7 +85,7 @@ int ImpCodeGen::visit(BoolConstExp* e) { // agregado
 }
 ```
 - `int ImpCodeGen::visit(BinaryExp* e)`: Esta definición de codegen se utiliza para compilar las expresiones binarias en Imp. Genera código que evalúa la expresión binaria y aplica el operador correspondiente. Se agregaron los casos `AND` y `OR` para los operadores lógicos.
-```
+```cpp
 int ImpCodeGen::visit(BinaryExp* e) {
   e->left->accept(this);
   e->right->accept(this);
@@ -111,7 +112,7 @@ int ImpCodeGen::visit(BinaryExp* e) {
 El cambio que se realizó en la gramática de Imp fue agregar la regla DoWhileStatement para permitir la construcción de la instrucción `do-while`. La regla se define como: `DoWhileStatement ::= "do" Body "while" "(" Exp ")" ";"`
 
 En el código del parser, se agregó un nuevo bloque `else if` para analizar la instrucción `do-while`. El bloque se encuentra en la línea 158 y se define como:
-```
+```cpp
 else if (match(Token::DO))
   {
     tb = parseBody();
@@ -127,7 +128,7 @@ else if (match(Token::DO))
 ```
 
 En el código de ImpTypeChecker, se agregó un nuevo método `visit` para la instrucción `DoWhileStatement`. El método se encuentra en la línea 89 y se define como:
-```
+```cpp
 void ImpTypeChecker::visit(DoWhileStatement* s) {
   in_loop = true;
   s->body->accept(this);
@@ -140,7 +141,7 @@ void ImpTypeChecker::visit(DoWhileStatement* s) {
 }
 ```
 En el código de `ImpCodeGen`, se agregó un nuevo método `visit` para la instrucción `DoWhileStatement`. El método se encuentra en la línea 104 y se define como:
-```
+```cpp
 int ImpCodeGen::visit(DoWhileStatement *s)
 {
   string l1 = next_label();
@@ -166,11 +167,11 @@ int ImpCodeGen::visit(DoWhileStatement *s)
 
 # Punto 4: Sentencias break y continue
 Para agregar las sentencias break y continue primero añadimos los tokens nuevos para estas instrucciones.
-```
+```cpp
 const char *Token::token_names[38] = { ..., "BREAK", "CONTINUE"}
 ```
 Añadimos las palabras reservadas tambien:
-```
+```cpp
 Scanner::Scanner(string s) : input(s), first(0), current(0)
 {...
   reserved["break"] = Token::BREAK;
@@ -178,7 +179,7 @@ Scanner::Scanner(string s) : input(s), first(0), current(0)
 }
 ```
 Luego se añadio en el parsestatement las nuevas condiciones:
-```
+```cpp
 else if (match(Token::BREAK))
   {
     s = new BreakStatement();
@@ -193,7 +194,7 @@ else if (match(Token::BREAK))
   }
 ```
 Añadimos al imp.hh los nuevos statements y con ello sus respectivos visitors:
-```
+```cpp
 class BreakStatement : public Stm {
 public:
   string label;
@@ -214,7 +215,7 @@ public:
 ```
 Modificamos el typecheker con la ayuda de la variable global `in_loop` para verificar si estamos en un loop o no:
 
-```
+```cpp
 void ImpTypeChecker::visit(BreakStatement* s) {
   if (!in_loop) {
     cout << "La instruccion break debe estar dentro de un bucle" << endl;
@@ -233,7 +234,7 @@ void ImpTypeChecker::visit(ContinueStatement* s) {
 
 ```
 Esta variable se actualizará en los bucles, se puede ver como cambia la declaracion de `in_loop` antes y despues de cada bucle:
-```
+```cpp
 void ImpTypeChecker::visit(WhileStatement* s) {
   in_loop = true;
   if (!s->cond->accept(this).match(booltype)) {
@@ -274,7 +275,7 @@ void ImpTypeChecker::visit(DoWhileStatement* s) {
 ```
 
 Para el codegen agregamos dos variables globales en las que almacenaremos los labels para el salto respectivo del break y continue:
-```
+```cpp
 class ImpCodeGen : public ImpVisitor {
 ...
   private:
@@ -284,7 +285,7 @@ class ImpCodeGen : public ImpVisitor {
 }
 ```
 Luego implementamos el codegen del break y continue según la lógica que conocemos:
-```
+```cpp
 int ImpCodeGen::visit(BreakStatement *s)
 {
   codegen(nolabel, "goto", this->final); // El break saltará hacia el label que marca el fin del bucle
@@ -298,7 +299,7 @@ int ImpCodeGen::visit(ContinueStatement *s)
 }
 ```
 Hacemos las respectivas modificaciones en whiledo, dowhile y for para que respondan a los saltos del break y continue:
-```
+```cpp
 int ImpCodeGen::visit(WhileStatement *s)
 {
   string l1 = next_label();
