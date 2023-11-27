@@ -1,0 +1,5 @@
+// For loop descendente
+var int x;
+for x : 2, 0 do
+  print(x) // no ejecuta
+endfor

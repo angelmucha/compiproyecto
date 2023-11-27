@@ -1,0 +1,5 @@
+var int x;
+// For loop ascendente
+for x : 5, 10 do
+  print(x)
+endfor

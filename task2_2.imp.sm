@@ -1,0 +1,17 @@
+push  2
+dup
+push  0
+lt
+jmpz L1
+L0: skip
+load 0
+print
+L2: skip
+push 1
+add
+dup
+push  0
+lt
+jmpz L1
+goto L0
+L1: skip

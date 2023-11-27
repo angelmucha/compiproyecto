@@ -1,0 +1,7 @@
+// bucle continue while 
+var int x;
+x = 0;
+while x < 6 do 
+    if x  == 3 then continue; else print(x) endif;
+    x = x + 1
+endwhile

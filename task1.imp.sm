@@ -1,0 +1,19 @@
+push  10
+store 1
+push  0
+store 0
+L0: skip
+load 0
+load 1
+lt
+jmpz L1
+push  10
+load 0
+exp
+print
+load 0
+push  1
+add
+store 0
+goto L0
+L1: skip
