@@ -2,10 +2,10 @@
 
 #include "imp_parser.hh"
 
-const char *Token::token_names[37] = {
+const char *Token::token_names[38] = {
     "LPAREN", "RPAREN", "PLUS", "MINUS", "MULT", "DIV", "EXP", "LT", "LTEQ", "EQ",
     "NUM", "ID", "PRINT", "SEMICOLON", "COMMA", "ASSIGN", "CONDEXP", "IF", "THEN", "ELSE", "ENDIF", "WHILE", "DO",
-    "ENDWHILE", "ERR", "END", "VAR", "NOT", "TRUE", "FALSE", "AND", "OR","FOR","COLON", "ENDFOR", "BREAK", "CONTINUE"};
+    "ENDWHILE", "ERR", "END", "VAR", "NOT", "TRUE", "FALSE", "AND", "OR","FOR","COLON", "ENDFOR", "BREAK", "CONTINUE", "MOD "};
 
 Token::Token(Type type) : type(type) { lexema = ""; }
 
@@ -97,7 +97,7 @@ Token *Scanner::nextToken()
       token = new Token(Token::DIV);
     }
   } 
-  else if (strchr("()+-*/;=<,!:", c))
+  else if (strchr("()+-*/;=<,!:%", c))
   {
     switch (c)
     {
@@ -112,6 +112,9 @@ Token *Scanner::nextToken()
       break;
     case '-':
       token = new Token(Token::MINUS);
+      break;
+    case '%':
+      token = new Token(Token::MOD);
       break;
     case '*':
       c = nextChar();
@@ -140,7 +143,7 @@ Token *Scanner::nextToken()
       break;
     case '=':
       token = new Token(Token::ASSIGN);
-      break;
+      //break;
       c = nextChar();
       if (c == '=')
         token = new Token(Token::EQ);
@@ -384,10 +387,7 @@ Stm *Parser::parseStatement()
   }
   else if (match(Token::IF))
   {
-    cout << "entrando al if" << endl;
     e = parseExp();
-    cout << previous->token_names[previous->type] << endl;
-    cout << current->token_names[current->type] << endl;
     if (!match(Token::THEN))
       parserError("Esperaba 'then'");
     tb = parseBody();
@@ -490,7 +490,6 @@ Exp *Parser::parseCExp()
   {
     Token::Type op = previous->type;
     BinaryOp binop = (op == Token::LT) ? LT : ((op == Token::LTEQ) ? LTEQ : EQ);
-    cout << "binop: " << binop << endl;
     rhs = parseAExp();
     e = new BinaryExp(e, rhs, binop);
   }
@@ -515,10 +514,16 @@ Exp *Parser::parseTerm()
 {
   Exp *e, *rhs;
   e = parseFExp();
-  while (match(Token::MULT) || match(Token::DIV))
+  while (match(Token::MULT) || match(Token::DIV) || match(Token::MOD)) // Agrega el caso para el operador de módulo
   {
     Token::Type op = previous->type;
-    BinaryOp binop = (op == Token::MULT) ? MULT : DIV;
+    BinaryOp binop;
+    if (op == Token::MULT)
+      binop = MULT;
+    else if (op == Token::DIV)
+      binop = DIV;
+    else if (op == Token::MOD) // Agrega el caso para el operador de módulo
+      binop = MOD;
     rhs = parseFExp();
     e = new BinaryExp(e, rhs, binop);
   }

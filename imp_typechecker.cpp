@@ -99,6 +99,7 @@ void ImpTypeChecker::visit(WhileStatement* s) {
 }
 
 void ImpTypeChecker::visit(ForStatement* s) {
+  in_loop = true;
   ImpType t1 = s->e1->accept(this);
   ImpType t2 = s->e2->accept(this);
   if (!t1.match(inttype) || !t2.match(inttype)) {
@@ -109,15 +110,18 @@ void ImpTypeChecker::visit(ForStatement* s) {
   env.add_var(s->id,inttype);
   s->body->accept(this);
   env.remove_level();
+  in_loop = false;
  return;
 }
 
 void ImpTypeChecker::visit(DoWhileStatement* s) {
+  in_loop = true;
+  s->body->accept(this);
   if (!s->cond->accept(this).match(booltype)) {
     cout << "Condicional en DoWhileStm debe de ser: " << booltype << endl;
     exit(0);
   }  
-  s->body->accept(this);
+ in_loop = false;
  return;
 }
 
@@ -148,6 +152,7 @@ ImpType ImpTypeChecker::visit(BinaryExp* e) {
   case MULT:
   case DIV:
   case EXP:
+  case MOD:
     result = inttype;
     break;
   case LT: 

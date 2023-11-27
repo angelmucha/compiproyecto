@@ -116,6 +116,7 @@ int ImpInterpreter::visit(BinaryExp* e) {
   case MINUS: result = v1-v2; break;
   case MULT: result = v1 * v2; break;
   case DIV: result = v1 / v2; break;
+  case MOD: result = v1 % v2; break;
   case EXP:
     result = 1;
     while (v2 > 0) { result *= v1; v2--; }

@@ -9,8 +9,8 @@ using namespace std;
 
 class Token {
 public:
-  enum Type { ID=0, LABEL, NUM, EOL, ERR, END, PUSH, EQ, GT, GE, LT, LE, GOTO, SKIP, POP, DUP, SWAP, ADD, SUB, MUL, DIV, STORE, LOAD, PRINT, JMPZ, JMPN, AND, OR };
-  static const char* token_names[28]; 
+  enum Type { ID=0, LABEL, NUM, EOL, ERR, END, PUSH, EQ, GT, GE, LT, LE, GOTO, SKIP, POP, DUP, SWAP, ADD, SUB, MUL, DIV, STORE, LOAD, PRINT, JMPZ, JMPN, AND, OR, EXP,MOD };
+  static const char* token_names[30]; 
   Type type;
   string lexema;
   Token(Type);

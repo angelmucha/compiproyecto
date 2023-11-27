@@ -7,7 +7,7 @@
 
 #include "svm_parser.hh"
 
-const char* Token::token_names[28] = { "ID", "LABEL", "NUM", "EOL", "ERR", "END", "PUSH", "EQ", "GT", "GE", "LT", "LE", "GOTO", "SKIP", "POP", "DUP", "SWAP", "ADD", "SUB", "MUL", "DIV", "STORE", "LOAD", "PRINT", "JMPZ", "JMPN", "AND", "OR" };
+const char* Token::token_names[30] = { "ID", "LABEL", "NUM", "EOL", "ERR", "END", "PUSH", "EQ", "GT", "GE", "LT", "LE", "GOTO", "SKIP", "POP", "DUP", "SWAP", "ADD", "SUB", "MUL", "DIV", "STORE", "LOAD", "PRINT", "JMPZ", "JMPN", "AND", "OR" ,"EXP","MOD"};
 
 Token::Token(Type type):type(type) { lexema = ""; }
 
@@ -47,7 +47,8 @@ Scanner::Scanner(string s):input(s),first(0),current(0) {
   reserved["and"] = Token::AND;
   reserved["or"] = Token::OR;
   reserved["print"] = Token::PRINT;
-
+  reserved["exp"] = Token::EXP;
+  reserved["mod"] = Token::MOD;
   
   reserved["push"] = Token::PUSH;
   reserved["store"] = Token::STORE;
@@ -174,6 +175,8 @@ Instruction::IType Token::tokenToIType(Token::Type tt) {
   case(Token::AND): itype = Instruction::IAND; break;
   case(Token::OR): itype = Instruction::IOR; break;
   case(Token::PRINT): itype = Instruction::IPRINT; break;
+  case(Token::EXP): itype = Instruction::IEXP; break;
+  case(Token::MOD): itype = Instruction::IMOD; break;
 
   case(Token::PUSH): itype = Instruction::IPUSH; break;
   case(Token::STORE): itype = Instruction::ISTORE; break;
@@ -270,7 +273,7 @@ Instruction* Parser::parseInstruction() {
       match(Token::MUL) || match(Token::DIV) || match(Token::EQ) ||
       match(Token::GT) || match(Token::GE) || match(Token::LT) ||
       match(Token::LE) || match(Token::AND) || match(Token::OR) ||
-      match(Token::PRINT)) { 
+      match(Token::PRINT) || match(Token::EXP) || match(Token::MOD)) { 
     tipo = 0;
     ttype = previous->type;
   } else if (match(Token::PUSH) || match(Token::STORE) || match(Token::LOAD)) {

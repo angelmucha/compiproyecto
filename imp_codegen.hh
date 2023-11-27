@@ -37,19 +37,11 @@ public:
   int visit(IdExp* e);
   int visit(ParenthExp* e);
   int visit(CondExp* e);
-  void pushWhileExitLabel(const string& label) { whileExitLabels.push(label); }
-  void popWhileExitLabel() { whileExitLabels.pop(); }
-  string topWhileExitLabel() const { return whileExitLabels.top(); }
-
-  void pushDoWhileExitLabel(const string& label) { doWhileExitLabels.push(label); }
-  void popDoWhileExitLabel() { doWhileExitLabels.pop(); }
-  string topDoWhileExitLabel() const { return doWhileExitLabels.top(); }
 
 private:
-  stack<string> whileExitLabels;
-  stack<string> doWhileExitLabels;
   std::ostringstream code;
   string nolabel;
+  string inicio,final;
   int current_label;
   Environment<int> direcciones;
   int siguiente_direccion, mem_locals;

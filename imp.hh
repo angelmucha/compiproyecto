@@ -16,7 +16,7 @@ using namespace std;
 class ImpVisitor;
 class TypeVisitor;
 
-enum BinaryOp { PLUS, MINUS, MULT, DIV, EXP, LT, LTEQ, EQ, AND, OR};
+enum BinaryOp { PLUS, MINUS, MULT, DIV, EXP, LT, LTEQ, EQ, AND, OR, MOD};
 enum UnaryOp { NEG, NOT };
   
 class Exp {

@@ -12,7 +12,7 @@ using namespace std;
 
 class Instruction {
 public:
-  enum IType { IPUSH=0, IPOP, IDUP, ISWAP, IADD, ISUB, IMUL, IDIV, IGOTO, IEQ, IGT, IGE, ILT, ILE, ISKIP, ISTORE, ILOAD, IPRINT, IJMPZ, IJMPN, IAND, IOR };
+  enum IType { IPUSH=0, IPOP, IDUP, ISWAP, IADD, ISUB, IMUL, IDIV, IGOTO, IEQ, IGT, IGE, ILT, ILE, ISKIP, ISTORE, ILOAD, IPRINT, IJMPZ, IJMPN, IAND, IOR, IEXP, IMOD };
   string label, jmplabel;
   IType type;
   bool hasarg;

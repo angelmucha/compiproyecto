@@ -89,7 +89,7 @@ int ImpPrinter::visit(ForStatement* s) {
   s->e2->accept(this);
   cout << "do" << endl;
   s->body->accept(this);
-  cout << "endwhile";
+  cout << "endfor";
   return 0;
 }
 

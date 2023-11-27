@@ -15,6 +15,7 @@ string Exp::binopToString(BinaryOp op) {
   case EQ: return "==";
   case AND: return "and";
   case OR: return "or";
+  case MOD: return "%";
   }
   return "";
 }

@@ -1,8 +1,9 @@
 #include <iostream>
+#include <math.h>
 
 #include "svm.hh"
 
-string snames[22] = { "push", "pop", "dup", "swap", "add", "sub", "mult", "div", "goto", "eq", "gt", "ge", "lt", "le", "skip", "store", "load", "print", "jmpz", "jmpn", "and", "or" };
+string snames[24] = { "push", "pop", "dup", "swap", "add", "sub", "mult", "div", "goto", "eq", "gt", "ge", "lt", "le", "skip", "store", "load", "print", "jmpz", "jmpn", "and", "or","exp","mod"};
 
 Instruction::Instruction(string l, IType itype):label(l),type(itype),hasarg(false) {
 }
@@ -108,7 +109,7 @@ void SVM::execute(Instruction* instr) {
 	     itype==Instruction::IDIV || itype==Instruction::IEQ || itype==Instruction::IGT ||
 	     itype==Instruction::IGE  || itype==Instruction::ILT || itype==Instruction::ILE ||
 	     itype==Instruction::IAND  || itype==Instruction::IOR ||
-	     itype==Instruction::ISWAP)  {
+	     itype==Instruction::ISWAP || itype==Instruction::IEXP || itype==Instruction::IMOD)  {
     top = opstack.top(); stack_pop();
     next = opstack.top(); stack_pop();    
     switch(itype) {
@@ -124,6 +125,8 @@ void SVM::execute(Instruction* instr) {
     case(Instruction::IAND): stack_push(next&&top?1:0); break;
     case(Instruction::IOR): stack_push(next||top?1:0); break;
     case(Instruction::ISWAP): stack_push(top); stack_push(next); break;
+    case(Instruction::IEXP): stack_push(pow(next,top)); break;
+    case(Instruction::IMOD): stack_push(next%top); break;
     default: perror("Programming Error 4");
     }
     pc++;

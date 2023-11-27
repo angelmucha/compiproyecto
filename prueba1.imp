@@ -1,7 +1,0 @@
-var int x, n; // variables globales
-n = 10; // longitud
-x = 0;
-while x < n do 
-    print(10** x); // imprimir potencia de 10
-    x = x+1
-endwhile

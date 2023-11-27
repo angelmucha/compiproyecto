@@ -12,6 +12,7 @@ using namespace std;
 class ImpInterpreter : public ImpVisitor {
 private:
   Environment<int> env;
+  bool breakLoop; // Variable para rastrear si se encuentra una instrucción "break"
 
 public:
   int interpret(Program*);
