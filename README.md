@@ -110,7 +110,18 @@ int ImpCodeGen::visit(BinaryExp* e) {
 
 # Punto 3: Sentencia do-while
 El cambio que se realizó en la gramática de Imp fue agregar la regla DoWhileStatement para permitir la construcción de la instrucción `do-while`. La regla se define como: `DoWhileStatement ::= "do" Body "while" "(" Exp ")" ";"`
-
+```cpp
+// DoWhileStatement ::= "do" Body "while" "(" Exp ")" ";"
+class DoWhileStatement : public Stm {
+public:
+  Body *body;
+  Exp* cond;
+  DoWhileStatement(Body* b, Exp* c);
+  int accept(ImpVisitor* v);
+  void accept(TypeVisitor* v);
+  ~DoWhileStatement();
+};
+```
 En el código del parser, se agregó un nuevo bloque `else if` para analizar la instrucción `do-while`. El bloque se encuentra en la línea 158 y se define como:
 ```cpp
 else if (match(Token::DO))
